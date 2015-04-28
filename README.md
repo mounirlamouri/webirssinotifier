@@ -1,0 +1,2 @@
+# webirssinotifier
+Web IRSSI Notifier
