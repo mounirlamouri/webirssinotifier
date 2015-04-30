@@ -20,7 +20,11 @@ class Message(db.Model):
 
 class SendHandler(webapp2.RequestHandler):
   def post(self):
-    json_object = json.loads(self.request.body)
+    try:
+      json_object = json.loads(self.request.body)
+    except:
+      self.response.write('{ "success": false, "error": "ParsingError", "body": "' + self.request.body + '" }');
+      return
 
     msg = Message(registration_id=json_object['registration_id'],
                   text=json_object['text'],
