@@ -1,0 +1,13 @@
+{
+  "name": "Web IRSSI Notifier",
+  "short_name": "IRSSI Notifier",
+  "icons": [{
+        "src": "images/200px-Irssi_logo.png",
+        "sizes": "200x200",
+        "type": "image/png"
+      }],
+  "start_url": "/",
+  "display": "standalone",
+  "gcm_sender_id": "244497989857",
+  "gcm_user_visible_only": true
+}

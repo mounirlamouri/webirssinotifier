@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Web IRSSI Notifier</title>
+  <link rel='manifest' href='manifest.json'>
+  <link rel='icon' href='images/200px-Irssi_logo.png'>
+</head>
+<script>
+  navigator.serviceWorker.register('/sw.js');
+</script>
+<body>
+  <button onclick='subscribe();'>Subscribe</button>
+</body>
+<script>
+  function subscribe() {
+    navigator.serviceWorker.ready.then(function(swRegistration) {
+      swRegistration.pushManager.subscribe().then(function(subscription) {
+        console.log(subscription.subscriptionId);
+      }).catch(function(e) {
+        console.log('failed!');
+      });
+    });
+  }
+</script>
+</html>
