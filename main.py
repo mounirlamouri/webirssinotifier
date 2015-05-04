@@ -49,6 +49,11 @@ class SendHandler(webapp2.RequestHandler):
 
     self.response.write('{ "success": true }');
 
+class NewMessagesHandler(webapp2.RequestHandler):
+  def get(self):
+    self.response.write('{ "messages": [ { "text": "foo" }, { "text": "bar" } ] }');
+
 app = webapp2.WSGIApplication([
   ('/send', SendHandler),
+  ('/newmessages', NewMessagesHandler),
 ], debug=True)
