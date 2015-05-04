@@ -14,10 +14,6 @@ class Message(db.Model):
   text = db.StringProperty(required=True)
   channel = db.StringProperty()
 
-#def clearRegistrations():
-#  for r in db.GqlQuery("SELECT * FROM Registration"):
-#    r.delete()
-
 class SendHandler(webapp2.RequestHandler):
   def post(self):
     try:
