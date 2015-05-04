@@ -51,7 +51,20 @@ class SendHandler(webapp2.RequestHandler):
 
 class NewMessagesHandler(webapp2.RequestHandler):
   def get(self):
-    self.response.write('{ "messages": [ { "text": "foo" }, { "text": "bar" } ] }');
+    messages = []
+    for message in db.GqlQuery("SELECT * FROM Message WHERE registration_id = :1",
+                               self.request.get('registration_id')):
+      message_field = {
+        'text': message.text
+      }
+      if message.channel:
+        message_field['channel'] = message.channel
+      messages.append(message_field)
+
+      # It was sent back, remove from storage.
+      message.delete()
+
+    self.response.write('{ "messages": ' + json.dumps(messages) + ' }');
 
 app = webapp2.WSGIApplication([
   ('/send', SendHandler),
