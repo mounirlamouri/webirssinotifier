@@ -9,6 +9,14 @@
   navigator.serviceWorker.register('/sw.js');
 </script>
 <body>
+  <header>
+{% if user %}
+    <div id='user'>{{ user }}</div>
+    <a href={{ login_logout_url }}>Logout</a>
+{% else %}
+    <a href={{ login_logout_url }}>Login</a>
+{% endif %}
+  </header>
   <button onclick='subscribe();'>Subscribe</button>
 </body>
 <script>

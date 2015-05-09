@@ -4,10 +4,11 @@ runtime: python27
 api_version: 1
 threadsafe: yes
 
+default_expiration: 0s
+
 handlers:
 - url: /
-  static_files: static/index.html
-  upload: static/index\.html
+  script: main.app
   secure: always
 
 - url: /send

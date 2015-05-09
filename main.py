@@ -1,18 +1,42 @@
 import json
-import webapp2
+import os
 import urllib
+import webapp2
+
 from google.appengine.api import urlfetch
+from google.appengine.api import users
 from google.appengine.ext import db
+from google.appengine.ext.webapp import template
 
 class Registration(db.Model):
   id = db.StringProperty(required=True)
-  email = db.StringProperty(required=True)
+  user = db.StringProperty(required=True)
   name = db.StringProperty()
 
 class Message(db.Model):
   registration_id = db.StringProperty(required=True)
   text = db.StringProperty(required=True)
   channel = db.StringProperty()
+
+class MainHandler(webapp2.RequestHandler):
+  def get(self):
+    user = ""
+    if users.get_current_user():
+      user = users.get_current_user().nickname()
+
+    login_logout_url = ""
+    if user:
+      login_logout_url = users.create_logout_url('/')
+    else:
+      login_logout_url = users.create_login_url('/')
+
+    template_values = {
+      'user': user,
+      'login_logout_url': login_logout_url,
+    }
+
+    path = os.path.join(os.path.dirname(__file__), 'index.html')
+    self.response.out.write(template.render(path, template_values))
 
 class SendHandler(webapp2.RequestHandler):
   def post(self):
@@ -47,6 +71,13 @@ class SendHandler(webapp2.RequestHandler):
 
 class NewMessagesHandler(webapp2.RequestHandler):
   def get(self):
+    user = users.get_current_user()
+    if not user:
+      self.response.write('{ "success": false, "error": "LoginError" }');
+      return
+
+    # TODO: check that the user owns the given registration_id.
+
     messages = []
     for message in db.GqlQuery("SELECT * FROM Message WHERE registration_id = :1",
                                self.request.get('registration_id')):
@@ -63,6 +94,7 @@ class NewMessagesHandler(webapp2.RequestHandler):
     self.response.write('{ "messages": ' + json.dumps(messages) + ' }');
 
 app = webapp2.WSGIApplication([
+  ('/', MainHandler),
   ('/send', SendHandler),
   ('/newmessages', NewMessagesHandler),
 ], debug=True)
