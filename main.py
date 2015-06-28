@@ -157,7 +157,7 @@ class UnregisterHandler(webapp2.RequestHandler):
       return
 
     for registration in db.GqlQuery("SELECT * FROM Registration WHERE user = :1 AND id = :2",
-                                    user.nickname(), json_object['id']);
+                                    user.nickname(), json_object['id']):
       registration.delete()
 
     self.response.write('{ "success": true }');
