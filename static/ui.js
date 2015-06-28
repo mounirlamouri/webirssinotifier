@@ -30,9 +30,9 @@ function updateRegistrations() {
     registrations = result;
 
     registrations.forEach(function(registration) {
-      var container = document.querySelector('#registrations');
       // TODO: include id to get unregistration really working.
-      container.appendChild(createDeviceInfo(registration.name, 'foo'));
+      document.querySelector('#registrations').appendChild(
+          createDeviceInfo(registration.name, registration.id));
     });
 
     // TODO: be smarter and don't show "Add" if the device registration is in
