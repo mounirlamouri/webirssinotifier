@@ -19,6 +19,14 @@ handlers:
   script: main.app
   secure: always
 
+- url: /registrations
+  script: main.app
+  secure: always
+
+- url: /register
+  script: main.app
+  secure: always
+
 - url: /*
   static_dir: static/
   secure: always

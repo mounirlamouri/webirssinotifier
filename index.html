@@ -4,6 +4,8 @@
   <title>Web IRSSI Notifier</title>
   <link rel='manifest' href='manifest.json'>
   <link rel='icon' href='images/200px-Irssi_logo.png'>
+  <script src='helpers.js'></script>
+  <script src='ui.js'></script>
 </head>
 <script>
   navigator.serviceWorker.register('/sw.js');
@@ -17,13 +19,46 @@
     <a href={{ login_logout_url }}>Login</a>
 {% endif %}
   </header>
-  <button onclick='subscribe();'>Subscribe</button>
+  <h2>This device</h2>
+  <h3>Status: <span id='status'></span></h3>
+  <h3 id='current-registration'></h3>
+  <h2>Other devices:</h2>
+  <div id='registrations'>
+  </div>
 </body>
 <script>
-  function subscribe() {
-    navigator.serviceWorker.ready.then(function(swRegistration) {
+  var registrations = [];
+
+  function insertRegisterButton() {
+    var form = document.createElement('form');
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      subscribe(this.name.value);
+    });
+
+    var text = document.createElement('input');
+    text.id = 'name';
+    text.required = true;
+    text.placeholder = 'Device name';
+
+    var button = document.createElement('button');
+    button.type = 'submit';
+    button.textContent = 'Add';
+
+    form.appendChild(text);
+    form.appendChild(button);
+    document.querySelector('#registrations').appendChild(form);
+  }
+
+  function subscribe(name) {
+    console.log('in subscribe');
+    getServiceWorkerRegistration().then(function (swRegistration) {
+      console.log('about to subscribe this device');
       swRegistration.pushManager.subscribe().then(function(subscription) {
         console.log(subscription.subscriptionId);
+        register(subscription.subscriptionId, name).then(function() {
+          updateRegistrations();
+        });
       }).catch(function(e) {
         console.log('failed!');
       });

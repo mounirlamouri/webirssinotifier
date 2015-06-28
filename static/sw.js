@@ -1,30 +1,26 @@
-function getCurrentRegistrationId() {
-  return self.registration.pushManager.getSubscription().then(function(subscription) {
-    return subscription ? subscription.subscriptionId : "";
-  })
-}
-
-function getMessages() {
-  return getCurrentRegistrationId().then(function(registration_id) {
-    return fetch('https://webirssinotifier.appspot.com/newmessages?registration_id=' + registration_id).then(function(response) {
-      if (response.status != '200')
-        throw new Error();
-      return response.json().then(function(json) {
-        return json ? json.messages : [];
-      });
-    });
-  });
-}
+importScripts('helpers.js');
 
 self.addEventListener('push', function(event) {
   event.waitUntil(getMessages().then(function(messages) {
+    var promises = [];
     messages.forEach(function(message) {
-      var title = message.channel ? 'New ping in #' + message.channel
-                                  : 'New private message';
-      self.registration.showNotification(title, {
-        body: message.text,
+      if (!message.type)
+        return;
+      var title = '';
+      switch (message.type) {
+        case 'channel':
+          title = 'New ping in ' + message.name;
+          break;
+        case 'query':
+          title = 'New message from ' + message.name;
+          break;
+      }
+
+      promises.push(self.registration.showNotification(title, {
+        body: message.body,
         icon: '/images/200px-Irssi_logo.png',
-      });
+      }));
     });
+    return Promise.all(promises);
   }));
 });
