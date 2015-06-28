@@ -4,9 +4,15 @@ function getServiceWorkerRegistration() {
   return Promise.resolve(self.registration);
 }
 
-function getPushSubscription() {
+function getPushManager() {
   return getServiceWorkerRegistration().then(function(swRegistration) {
-    return swRegistration.pushManager.getSubscription();
+    return swRegistration.pushManager;
+  });
+}
+
+function getPushSubscription() {
+  return getPushManager().then(function(pushManager) {
+    return pushManager.getSubscription();
   });
 }
 
@@ -39,19 +45,5 @@ function getRegistrations() {
     return r.json();
   }).then(function(json) {
     return json ? json.registrations : [];
-  });
-}
-
-function register(id, name) {
-  return fetch('/register', { mode: 'same-origin',
-                              method: 'post',
-                              credentials: 'include',
-                              body: JSON.stringify({ id: id, name: name }) }).then(function(r) {
-    if (r.status != '200')
-      throw new Error();
-    return r.json();
-  }).then(function(json) {
-    if (!json || !json.success)
-      throw new Error();
   });
 }

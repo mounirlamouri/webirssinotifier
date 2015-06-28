@@ -26,43 +26,4 @@
   <div id='registrations'>
   </div>
 </body>
-<script>
-  var registrations = [];
-
-  function insertRegisterButton() {
-    var form = document.createElement('form');
-    form.addEventListener('submit', function(e) {
-      e.preventDefault();
-      subscribe(this.name.value);
-    });
-
-    var text = document.createElement('input');
-    text.id = 'name';
-    text.required = true;
-    text.placeholder = 'Device name';
-
-    var button = document.createElement('button');
-    button.type = 'submit';
-    button.textContent = 'Add';
-
-    form.appendChild(text);
-    form.appendChild(button);
-    document.querySelector('#registrations').appendChild(form);
-  }
-
-  function subscribe(name) {
-    console.log('in subscribe');
-    getServiceWorkerRegistration().then(function (swRegistration) {
-      console.log('about to subscribe this device');
-      swRegistration.pushManager.subscribe().then(function(subscription) {
-        console.log(subscription.subscriptionId);
-        register(subscription.subscriptionId, name).then(function() {
-          updateRegistrations();
-        });
-      }).catch(function(e) {
-        console.log('failed!');
-      });
-    });
-  }
-</script>
 </html>
