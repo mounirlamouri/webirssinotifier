@@ -143,10 +143,30 @@ class RegisterHandler(webapp2.RequestHandler):
     registration.put()
     self.response.write('{ "success": true }');
 
+class UnregisterHandler(webapp2.RequestHandler):
+  def post(self):
+    try:
+      json_object = json.loads(self.request.body)
+    except:
+      self.response.write('{ "success": false, "error": "ParsingError", "body": "' + self.request.body + '" }');
+      return
+
+    user = users.get_current_user()
+    if not user:
+      self.response('{ "success": false, "error": "LoginError" }');
+      return
+
+    for registration in db.GqlQuery("SELECT * FROM Registration WHERE user = :1 AND id = :2",
+                                    user.nickname(), json_object['id']);
+      registration.delete()
+
+    self.response.write('{ "success": true }');
+
 app = webapp2.WSGIApplication([
   ('/', MainHandler),
   ('/send', SendHandler),
   ('/newmessages', NewMessagesHandler),
   ('/registrations', GetRegistrationsHandler),
   ('/register', RegisterHandler),
+  ('/unregister', UnregisterHandler),
 ], debug=True)

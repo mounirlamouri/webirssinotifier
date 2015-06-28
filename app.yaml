@@ -27,6 +27,10 @@ handlers:
   script: main.app
   secure: always
 
+- url: /unregister
+  script: main.app
+  secure: always
+
 - url: /*
   static_dir: static/
   secure: always
