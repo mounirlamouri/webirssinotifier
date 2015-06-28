@@ -16,8 +16,12 @@ function createDeviceInfo(name, id) {
   button.onclick = function() {
     return fetch('/unregister',
                  { mode: 'same-origin', method: 'post', credentials: 'include',
-                   body: JSON.stringify({ id: id }) }).then(function(r) {
-      console.log(r);
+                   body: JSON.stringify({ id: id }) }).then(function(response) {
+      if (response.status != '200')
+        return;
+      getPushSubscription().then(function(subscription) {
+        subscription.unsubscribe();
+      });
     });
   };
   container.appendChild(button);

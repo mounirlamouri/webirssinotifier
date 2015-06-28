@@ -4,10 +4,14 @@ function getServiceWorkerRegistration() {
   return Promise.resolve(self.registration);
 }
 
-function getCurrentRegistrationId() {
+function getPushSubscription() {
   return getServiceWorkerRegistration().then(function(swRegistration) {
     return swRegistration.pushManager.getSubscription();
-  }).then(function(subscription) {
+  });
+}
+
+function getCurrentRegistrationId() {
+  return getPushSubscription().then(function(subscription) {
     return subscription ? subscription.subscriptionId : "";
   });
 }
