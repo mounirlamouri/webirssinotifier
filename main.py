@@ -44,7 +44,7 @@ class SendHandler(webapp2.RequestHandler):
     try:
       json_object = json.loads(self.request.body)
     except:
-      self.response.write('{ "success": false, "error": "ParsingError", "body": "' + self.request.body + '" }');
+      self.response.write('{ "success": false, "error": "ParsingError", "body": "' + self.request.body + '" }')
       return
 
     for registration in db.GqlQuery("SELECT * FROM Registration WHERE user = :1", json_object['user']):
@@ -71,13 +71,13 @@ class SendHandler(webapp2.RequestHandler):
                 'Authorization': 'key=AIzaSyDn9hiUO1LyVJFxKA5u2qMCYox4NZ5vjdM'
               })
 
-    self.response.write('{ "success": true }');
+    self.response.write('{ "success": true }')
 
 class NewMessagesHandler(webapp2.RequestHandler):
   def get(self):
     user = users.get_current_user()
     if not user:
-      self.response.write('{ "success": false, "error": "LoginError" }');
+      self.response.write('{ "success": false, "error": "LoginError" }')
       return
 
     registration_id = self.request.get('registration_id')
@@ -85,7 +85,7 @@ class NewMessagesHandler(webapp2.RequestHandler):
     # Check that the registration is owned by the user.
     if db.GqlQuery("SELECT * FROM Registration WHERE id = :1 AND user = :2",
                    registration_id, user.nickname()).count() == 0:
-      self.response.write('{ "success": false, "error": "RegistrationNotFound" }');
+      self.response.write('{ "success": false, "error": "RegistrationNotFound" }')
       return
 
     messages = []
@@ -100,13 +100,13 @@ class NewMessagesHandler(webapp2.RequestHandler):
       # It was sent back, remove from storage.
       message.delete()
 
-    self.response.write('{ "messages": ' + json.dumps(messages) + ' }');
+    self.response.write('{ "messages": ' + json.dumps(messages) + ' }')
 
 class GetRegistrationsHandler(webapp2.RequestHandler):
   def get(self):
     user = users.get_current_user()
     if not user:
-      self.response.write('{ "success": false, "error": "LoginError" }');
+      self.response.write('{ "success": false, "error": "LoginError" }')
       return
 
     registrations = []
@@ -117,50 +117,50 @@ class GetRegistrationsHandler(webapp2.RequestHandler):
       }
       registrations.append(registration)
 
-    self.response.write('{ "registrations": ' + json.dumps(registrations) + ' }');
+    self.response.write('{ "registrations": ' + json.dumps(registrations) + ' }')
 
 class RegisterHandler(webapp2.RequestHandler):
   def post(self):
     try:
       json_object = json.loads(self.request.body)
     except:
-      self.response.write('{ "success": false, "error": "ParsingError", "body": "' + self.request.body + '" }');
+      self.response.write('{ "success": false, "error": "ParsingError", "body": "' + self.request.body + '" }')
       return
 
     user = users.get_current_user()
     if not user:
-      self.response('{ "success": false, "error": "LoginError" }');
+      self.response('{ "success": false, "error": "LoginError" }')
       return
 
     if db.GqlQuery("SELECT * FROM Registration WHERE user = :1 AND id = :2",
                    user.nickname(), json_object['id']).count() != 0:
-      self.response.write('{ "success": true }');
+      self.response.write('{ "success": true }')
       return
 
     registration = Registration(id=json_object['id'],
                                 user=user.nickname(),
                                 name=json_object['name'])
     registration.put()
-    self.response.write('{ "success": true }');
+    self.response.write('{ "success": true }')
 
 class UnregisterHandler(webapp2.RequestHandler):
   def post(self):
     try:
       json_object = json.loads(self.request.body)
     except:
-      self.response.write('{ "success": false, "error": "ParsingError", "body": "' + self.request.body + '" }');
+      self.response.write('{ "success": false, "error": "ParsingError", "body": "' + self.request.body + '" }')
       return
 
     user = users.get_current_user()
     if not user:
-      self.response('{ "success": false, "error": "LoginError" }');
+      self.response('{ "success": false, "error": "LoginError" }')
       return
 
     for registration in db.GqlQuery("SELECT * FROM Registration WHERE user = :1 AND id = :2",
                                     user.nickname(), json_object['id']):
       registration.delete()
 
-    self.response.write('{ "success": true }');
+    self.response.write('{ "success": true }')
 
 app = webapp2.WSGIApplication([
   ('/', MainHandler),
