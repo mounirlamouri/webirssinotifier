@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Web IRSSI Notifier</title>
+  <link rel='manifest' href='manifest.json'>
+  <link rel='icon' href='images/200px-Irssi_logo.png'>
+  <script src='helpers.js'></script>
+  <script src='ui.js'></script>
+</head>
+<script>
+  navigator.serviceWorker.register('/sw.js');
+</script>
+<body>
+  <header>
+    <a href={{ login }}>Login</a>
+  </header>
+</body>
+</html>
