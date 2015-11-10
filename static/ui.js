@@ -2,7 +2,7 @@
 
 function register(name) {
   getPushManager().then(function(pushManager) {
-    return pushManager.subscribe();
+    return pushManager.subscribe({ userVisibleOnly: true });
   }).then(function(subscription) {
     var id = subscription.subscriptionId;
     console.log(id);
