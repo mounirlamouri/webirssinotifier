@@ -12,12 +12,8 @@
 </script>
 <body>
   <header>
-{% if user %}
     <div id='user'>{{ user }}</div>
-    <a href={{ login_logout_url }}>Logout</a>
-{% else %}
-    <a href={{ login_logout_url }}>Login</a>
-{% endif %}
+    <a href={{ logout }}>Logout</a>
   </header>
   <h2>This device</h2>
   <h3>Status: <span id='status'></span></h3>

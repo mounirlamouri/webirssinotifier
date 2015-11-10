@@ -4,8 +4,6 @@
   <title>Web IRSSI Notifier</title>
   <link rel='manifest' href='manifest.json'>
   <link rel='icon' href='images/200px-Irssi_logo.png'>
-  <script src='helpers.js'></script>
-  <script src='ui.js'></script>
 </head>
 <script>
   navigator.serviceWorker.register('/sw.js');
@@ -14,5 +12,8 @@
   <header>
     <a href={{ login }}>Login</a>
   </header>
+  <p>
+    Get Push Messages in your browser when you get pinged on IRSSI.
+  </p>
 </body>
 </html>

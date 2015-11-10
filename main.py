@@ -21,19 +21,15 @@ class Message(db.Model):
 
 class MainHandler(webapp2.RequestHandler):
   def get(self):
-    user = ""
-    if users.get_current_user():
-      user = users.get_current_user().nickname()
-
-    login_logout_url = ""
-    if user:
-      login_logout_url = users.create_logout_url('/')
-    else:
-      login_logout_url = users.create_login_url('/')
+    if not users.get_current_user():
+      self.response.out.write(template.render(
+        os.path.join(os.path.dirname(__file__), 'landing.html'),
+        { 'login': users.create_login_url('/') }))
+      return
 
     template_values = {
-      'user': user,
-      'login_logout_url': login_logout_url,
+      'user': users.get_current_user().nickname(),
+      'logout': users.create_logout_url('/'),
     }
 
     path = os.path.join(os.path.dirname(__file__), 'index.html')
