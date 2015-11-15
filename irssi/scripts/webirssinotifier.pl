@@ -2,7 +2,8 @@ use strict;
 use warnings;
 
 use Irssi;
-use vars qw($VERSION %IRSSI);
+use URI::Escape;
+use vars qw($VERSION %IRSSI); 
 
 our $VERSION = "0.8";
 our %IRSSI = (
@@ -53,10 +54,10 @@ sub signal_print_text {
       (($dest->{level} & MSGLEVEL_NOHILIGHT) != 0) ||
       (($dest->{level} & MSGLEVEL_HILIGHT) == 0)) {
     return;
-  }
+  }   
 
   if (should_send_message($dest->{server})) {
-    send_message("channel", $dest->{target}, Irssi::strip_codes($text));
+    send_message("channel", $dest->{target}, uri_escape(Irssi::strip_codes($text)));
   }
 }
 
@@ -64,7 +65,7 @@ sub signal_message_private {
   my ($server, $msg, $nick, $address) = @_;
 
   if (should_send_message($server)) {
-    send_message("query", $nick, Irssi::strip_codes($msg));
+    send_message("query", $nick, uri_escape(Irssi::strip_codes($msg)));
   }
 }
 
