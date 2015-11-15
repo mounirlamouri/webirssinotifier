@@ -17,7 +17,7 @@ self.addEventListener('push', function(event) {
       }
 
       promises.push(self.registration.showNotification(title, {
-        body: message.body,
+        body: decodeURI(message.body),
         icon: '/images/200px-Irssi_logo.png',
       }));
     });
