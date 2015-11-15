@@ -4,7 +4,7 @@ function register(name) {
   getPushManager().then(function(pushManager) {
     return pushManager.subscribe({ userVisibleOnly: true });
   }).then(function(subscription) {
-    var id = subscription.subscriptionId;
+    var id = getRegistrationIdFromSubscription(subscription);
     console.log(id);
     return fetch('/register', { mode: 'same-origin',
                                 method: 'post',
@@ -26,7 +26,7 @@ function unregister() {
     subscription = s;
     if (!subscription)
       throw new Error();
-    var id = subscription.subscriptionId;
+    var id = getRegistrationIdFromSubscription(subscription);
     return fetch('/unregister',
                  { mode: 'same-origin', method: 'post', credentials: 'include',
                    body: JSON.stringify({ id: id }) });

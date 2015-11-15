@@ -16,15 +16,20 @@ function getPushSubscription() {
   });
 }
 
+function getRegistrationIdFromSubscription(subscription) {
+  var id = subscription.endpoint;
+  return id.substr(id.search("/gcm/send/") + 10);
+}
+
 function getCurrentRegistrationId() {
   return getPushSubscription().then(function(subscription) {
-    return subscription ? subscription.subscriptionId : "";
+    return subscription ? getRegistrationIdFromSubscription(subscription) : "";
   });
 }
 
 function getMessages() {
   return getCurrentRegistrationId().then(function(registration_id) {
-    console.log('found registration id');
+    console.log('found registration id: ' + registration_id);
     return fetch('/newmessages?registration_id=' + registration_id,
                  { mode: 'same-origin', credentials: 'include' });
   }).then(function(response) {
