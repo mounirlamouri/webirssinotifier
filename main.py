@@ -51,15 +51,16 @@ class SendHandler(webapp2.RequestHandler):
       msg.put()
 
       form_fields = {
-        "registration_id": registration.id,
+        #"registration_id": registration.id,
         "data": {
           "type": json_object['type'],
           "name": json_object['name'],
           "body": json_object['body'],
         },
       }
+      # https://updates.push.services.mozilla.com/push/v1/gAAAAABXi77iPJ9jYJHvh-Qh3HaLA1egcjAFy1oZ-1xl0DfS6b-7pj-1dON833yhiLan3Sn5dtYML_2vkAG-Bhd2P7YkBGUjWoZSvkDp8RSeuTs0sDdXv8PUBaOOc8PH2_GfvVjog53h
       form_data = urllib.urlencode(form_fields)
-      result = urlfetch.fetch(url="https://android.googleapis.com/gcm/send",
+      result = urlfetch.fetch(url=registration.id,
                               payload=form_data,
                               method=urlfetch.POST,
                               headers={
